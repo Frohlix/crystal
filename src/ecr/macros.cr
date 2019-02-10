@@ -103,4 +103,23 @@ module ECR
       ::ECR.embed({{filename}}, %io)
     end
   end
+
+  # HERE BE DRAGONS
+
+  macro def_to_s_string(string)
+    def to_s_string(__io__)
+      ECR.embed_string {{string}}, "__io__"
+    end
+  end
+
+  macro embed_string(string, io_name)
+    \{{ run("ecr/process_string", {{string}}, {{io_name.id.stringify}}) }}
+  end
+
+  macro render_string(string)
+    ::String.build do |%io|
+      ::ECR.embed_string({{string}}, %io)
+    end
+  end
+
 end
